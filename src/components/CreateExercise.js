@@ -1,37 +1,23 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import reducer from "../reducer/reducer";
-const CreateExercise = () => {
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      username: "Ayush",
-    },
-    {
-      id: 2,
-      username: "Alisha",
-    },
-    {
-      id: 3,
-      username: "Anish",
-    },
-    {
-      id: 4,
-      username: "Ishwor",
-    },
-    {
-      id: 5,
-      username: "Sabina",
-    },
-  ]);
+import axios from "axios";
+import { useStateValue } from "../reducer/StateProvider";
 
-  const [exercise, dispatch] = useReducer(reducer, {
-    username: "",
-    description: "",
-    duration: 5,
-    date: new Date(),
-  });
+const CreateExercise = () => {
+
+  const [users, setUsers] = useState([]);
+  const [exercise, dispatch] = useStateValue()
+  useEffect(() => {
+    axios("http://localhost:5000/users/").then((response) => {
+      setUsers(
+        response.data.map(({ username, _id: id }) => ({
+          username,
+          id,
+        }))
+      );
+    });
+  }, []);
 
   const userOptions = (userArray) => {
     return userArray.map(({ username, id }) => {
@@ -44,7 +30,7 @@ const CreateExercise = () => {
   };
 
   const handleSelectChange = (e) => {
-    let username = users.find((user) => user.id == e.target.value).username;
+    let username = users.find((user) => user.id === e.target.value).username;
     dispatch({
       type: "USERNAME",
       payload: {
@@ -81,11 +67,15 @@ const CreateExercise = () => {
   };
 
   const handleSubmit = (e) => {
-      e.preventDefault();
-      if (exercise.username == '') {
-          console.log("Error")
-          return;
-      }
+    e.preventDefault();
+    if (exercise.username === "") {
+      console.log("Error");
+      return;
+    }
+    console.log(exercise);
+    axios.post('http://localhost:5000/exercises/add/', exercise)
+      .then(response => console.log(response))
+    .catch(err => console.log(err.message))
   };
   return (
     <div className="createExercise">
@@ -95,13 +85,17 @@ const CreateExercise = () => {
           <label htmlFor="username">Users</label>
           <select
             className="form-control"
-            value = {exercise.username ? exercise.username : 0}
+            value={`${
+              exercise.username
+                ? users.find((_) => _.username === exercise.username).id
+                : "0"
+            }`}
             onChange={(e) => handleSelectChange(e)}
             required
           >
-            <option value="0" disabled>
+            <option value={"0"} disabled>
               {" "}
-              ----Plase Select Option From Dropdown----
+              ----Please Select A User From Dropdown----
             </option>
             {userOptions(users)}
           </select>
@@ -131,10 +125,11 @@ const CreateExercise = () => {
         </div>
         <div className="form-group">
           <label htmlFor="schedule">Schedule</label>
+          <br />
           <ReactDatePicker
             id="schedule"
             className="form-control"
-            required
+            minDate={new Date()}
             selected={exercise.date}
             onChange={(date) => handleDateChange(date)}
           />

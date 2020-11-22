@@ -1,25 +1,43 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Card from "./Card";
+import axios from 'axios'
+
+
 
 const ExercisesList = () => {
 
-  const [lists, setList] = useState([{
-      id: 10,
-      username: 'Ayush',
-      description: 'Good Boy',
-      duration: 15,
-      date: new Date().toDateString()
-    }
-  ])
- console.log(lists.forEach(list => console.log(list)))
+  const [lists, setList] = useState([])
+
+  useEffect(() => {
+    axios('http://localhost:5000/exercises')
+      .then(res => {
+        let humanReadableData = res.data.map((data) => {
+          const id = data._id
+          let { username, description, duration } = data;
+          duration = `${duration} minutes`
+          const options = { year: "numeric", month: "long", day: "numeric" };
+          const date = new Date(data.date).toLocaleString(undefined, options)
+          return {id, username, description, duration, date}
+        });
+        setList(humanReadableData)
+    })
+    
+  }, [])
+
+  useEffect(() => {
+    lists.map(list => delete list._id)
+  }, [lists])
   return (
     <div className="exerciseList">
       <h4 className="text-center">All Exercises</h4>
-      <div>
+      {
+        lists.length ? (<div>
       {
         lists.map(list => <Card key={list.id} list={{...list}} />)
       }
-      </div>
+      </div>) : <h5 className = "text-center lead mt-4">There are no exercises in the list!</h5>
+      }
+      
     </div>
   )
 };

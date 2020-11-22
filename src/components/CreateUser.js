@@ -1,10 +1,12 @@
 import { useState } from "react";
+import axios from 'axios'
 
 const CreateUser = () => {
   const [username, setUserName] = useState("");
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(username);
+    e.preventDefault()
+    axios.post('http://localhost:5000/users/add', {username})
+    .then(res => console.log(res))
   };
   return (
     <div className="createUser">

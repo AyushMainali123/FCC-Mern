@@ -1,3 +1,11 @@
+
+export const initialState = {
+  username: "",
+  description: "",
+  duration: 5,
+  date: new Date(),
+};
+
 export default (state, action) => {
     switch (action.type) {
         case "USERNAME": 

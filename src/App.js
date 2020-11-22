@@ -1,3 +1,4 @@
+import {useReducer} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import CreateExercise from './components/CreateExercise';
@@ -7,9 +8,8 @@ import ExercisesList from './components/ExercisesList';
 import Navbar from './components/Navbar'
 import './App.css'
 
-
 function App() {
-  return (
+  return (      
     <Router>
       <Navbar />
       <br />
