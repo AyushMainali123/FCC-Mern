@@ -20,7 +20,7 @@ const Navbar = () => {
           <ul className="navbar-nav">
             <li className="nav-item active">
               <Link to="/" className="nav-link" >
-                ExerciseList <span className="sr-only">(current)</span>
+                ExerciseList
               </Link>
             </li>
             <li className="nav-item">

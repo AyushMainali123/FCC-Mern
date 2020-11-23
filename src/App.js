@@ -15,7 +15,7 @@ function App() {
       <br />
       <Switch>
         <Route path="/" component={ExercisesList} exact={ true}/>
-        <Route path="/edit/:id" component={EditExercise} />
+        <Route path="/edit/:id" component={EditExercise}/>
         <Route path="/create" component={CreateExercise} />
         <Route path="/user" component={CreateUser} />
       </Switch>

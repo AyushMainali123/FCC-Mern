@@ -16,6 +16,7 @@ const CreateExercise = () => {
           id,
         }))
       );
+      
     });
   }, []);
 
@@ -74,7 +75,10 @@ const CreateExercise = () => {
     }
     console.log(exercise);
     axios.post('http://localhost:5000/exercises/add/', exercise)
-      .then(response => console.log(response))
+      .then(response => {
+        console.log(response)
+        window.location = "/";
+      })
     .catch(err => console.log(err.message))
   };
   return (

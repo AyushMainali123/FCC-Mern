@@ -1,13 +1,23 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-const Card = (list) => {
-  const { id, username, description, duration, date } = list.list;
-  const handleDelete = () => {
+import { useExerciseValue } from "../reducer/ExerciseListProvider";
+const Card = ({ list }) => {
+  const { id, username, description, duration, date } = list;
+  const [lists, dispatch] = useExerciseValue();
+  const handleDelete = (id) => {
     axios
       .delete(`http://localhost:5000/exercises/${id}`)
-      .then((res) => console.log(res, "Deleted"))
-      .catch((err) => console.log(err.messagee));
+      .then((res) => {
+        dispatch({
+          type: "DELETE_EXERCISE",
+          payload: {
+            id,
+          },
+        });
+        window.location = "/";
+      })
+      .catch((err) => console.log(err.message));
   };
   return (
     <div className="card my-4" id={id}>
@@ -19,7 +29,7 @@ const Card = (list) => {
         <Link to={`edit/${id}`} className="card-link">
           Edit
         </Link>
-        <button className="btn btn-danger mx-4" onClick={() => handleDelete()}>
+        <button className="btn btn-danger mx-4" onClick={() => handleDelete(id)}>
           Delete
         </button>
       </div>

@@ -3,10 +3,17 @@ import axios from 'axios'
 
 const CreateUser = () => {
   const [username, setUserName] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault()
     axios.post('http://localhost:5000/users/add', {username})
-    .then(res => console.log(res))
+      .then(res => {
+        console.log(res)
+        window.location = '/'
+      })
+      .catch(err => {
+      console.log(err.message)
+    })
   };
   return (
     <div className="createUser">
